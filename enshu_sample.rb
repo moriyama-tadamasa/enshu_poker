@@ -58,7 +58,7 @@ while(1)
                                 puts "3:#{t3}"
                                 print "4:#{t4}  "
                                 puts "5:#{t5}"
-                                puts "0:カードの交換を終了する"
+                                puts "0:カードの交換を実行する"
                                 puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                                 ans_game_trade = gets.to_i
                                 case ans_game_trade
@@ -66,15 +66,15 @@ while(1)
                                             ans_game_trade_end = 10
                                             while(1)
                                                 puts "~~~~~~~~~~~~交換終了確認画面~~~~~~"
-                                                puts "本当によろしいですか？"
-                                                puts "0:カードの交換を終了"
-                                                puts "1:カードの交換を継続"
+                                                puts "本当に交換してよろしいですか？"
+                                                puts "1:実行"
+                                                puts "0:交換を継続"
                                                 ans_game_trade_end = gets.to_i
                                                 
-                                                if ans_game_trade_end == 0
+                                                if ans_game_trade_end == 1
                                                     ans_game_trade = 0
                                                     break
-                                                elsif ans_game_trade_end == 1
+                                                elsif ans_game_trade_end == 0
                                                     ans_game_trade = 10
                                                     break
                                                 else 
@@ -149,7 +149,7 @@ while(1)
                                         end
                                         puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
                                         p "COMの手札はノーペアです"
-                                        puts "[[s10]|[c8]|[h12]|[d13]|[h1]]"
+                                        puts "|s10|c8|h12|d13|h1|"
                                         if card == 1
                                             p "あなたの勝ちです"
                                             win += 1
