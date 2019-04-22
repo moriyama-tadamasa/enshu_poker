@@ -148,7 +148,6 @@ while(1)
                                             win += 1
                                             p "戦績:#{win}勝#{lose}敗"
                                             ary_win_card << "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
-                                            p ary_win_card
                                         else
                                             p "あなたの負けです"
                                             lose += 1
@@ -177,6 +176,7 @@ while(1)
             i = 1
             score_menu = 999
             while score_menu != 0
+                i = 1
                 puts "~~~~~~~~~~~~成績画面~~~~~~~~~~~~"
                 if(total == 0)
                     p "成績がありません"
@@ -187,7 +187,9 @@ while(1)
                     if win > 0
                         p ary_win_card[i-1]
                     end
-                    i += i
+                    if win > i then
+                        i += i
+                    end
                 }
             end
             p "成績の初期化：１"
@@ -204,6 +206,7 @@ while(1)
                             lose = 0
                             total = 0
                             ary_win_card.clear
+                            i=1
                         end
             end
         end
