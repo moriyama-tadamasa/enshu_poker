@@ -120,13 +120,13 @@ while(1)
                                 if t1_ch == 1
                                     t1 = t6
                                 end
-                                if t2_ch == 2
+                                if t2_ch == 1
                                     t2 = t7
                                 end
-                                if t3_ch == 3
+                                if t3_ch == 1
                                     t3 = t8
                                 end
-                                if t4_ch == 4
+                                if t4_ch == 1
                                     t4 = t9
                                 end
                                 if t5_ch == 1
