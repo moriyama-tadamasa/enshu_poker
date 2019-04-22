@@ -1,3 +1,9 @@
+def ch_card(t_ch,tn,tnn)
+    if t_ch == 1
+        tn = tnn
+    end
+end
+
 win = 0
 lose = 0
 ary_win_card = []
@@ -29,40 +35,44 @@ while(1)
                 puts "現在の手札"
                 puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
                 puts "手札の交換：1"
-                puts "メイン画面に戻る：2"
+                puts "メイン画面に戻る：0"
                 puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                 ans_game_menu = gets.to_i
-                ans_game_trade = 0
+                ans_game_trade = 99
                     case ans_game_menu
+                        when 0 then
+                            break
                         when 1 then
-                            while(ans_game_trade != 6)
+                            while(ans_game_trade != 0)
                                 puts "現在の手札"
                                 puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
-                                puts "何枚目のカードを交換しますか？"
-                                puts "1:左から1枚目のカードを交換する"
-                                puts "2:左から2枚目のカードを交換する"
-                                puts "3:左から3枚目のカードを交換する"
-                                puts "4:左から4枚目のカードを交換する"
-                                puts "5:左から5枚目のカードを交換する"
-                                puts "6:カードの交換を終了する"
+                                puts "どのカードを交換しますか？"
+                                puts "1:#{t1}を交換する"
+                                puts "2:#{t2}を交換する"
+                                puts "3:#{t3}を交換する"
+                                puts "4:#{t4}を交換する"
+                                puts "5:#{t5}を交換する"
+                                puts "0:カードの交換を終了する"
                                 ans_game_trade = gets.to_i
+                                t1_ch = 0
+                                t2_ch = 0
+                                t3_ch = 0
+                                t4_ch = 0
+                                t5_ch = 0
+                            end
                                 case ans_game_trade
-                                    when 1 then
-                                        t1 = t6
-                                    when 2 then
-                                        t2 = t7
-                                    when 3 then
-                                        t3 = t8
-                                    when 4 then
-                                        t4 = t9
-                                    when 5 then
-                                        t5 = t10
-                                    when 6 then
-                                        puts "本当によろしいですか？ y/n"
-                                        ans_game_trade_end = gets.to_s.chomp
-                                        if ans_game_trade_end == "n"
+                                    when 0 then
+                                        puts "本当によろしいですか？"
+                                        puts "0でカードの交換を終了します。0以外で継続します"
+                                        ans_game_trade_end = gets.to_i
+                                        if ans_game_trade_end == 0
                                             ans_game_trade = 0
                                         end
+                                        ch_card(t1_ch,t1,t6)
+                                        ch_card(t2_ch,t2,t7)
+                                        ch_card(t3_ch,t3,t8)
+                                        ch_card(t4_ch,t4,t9)
+                                        ch_card(t5_ch,t5,t10)
                                         puts "~~~~~~~~~~~~勝敗画面~~~~~~~~~~~~"
                                         card = 0
                                         if (t1 == "[s1]" && t5 == "[c1]")
@@ -73,7 +83,7 @@ while(1)
                                         end
                                         puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
                                         p "COMの手札はノーペアです"
-                                        puts "[[s10]|[c8]|[h12]|[d13]|[h1]"
+                                        puts "[[s10]|[c8]|[h12]|[d13]|[h1]]"
                                         if card == 1
                                             p "あなたの勝ちです"
                                             win += 1
@@ -86,25 +96,67 @@ while(1)
                                             p "戦績:#{win}勝#{lose}敗"
                                         end
                                         puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                                        p "続けますか? 1でメインメニュー、1以外で続けます"
+                                        p "続けますか? 0でメインメニュー、0以外で続けます"
                                         tuduki = gets.to_i
-                                    else 
+                                    when 1 then
+                                        t1_disp = t1
+                                        if t1_ch == 0 then
+                                            t1_ch = 1
+                                            t1 << "●"
+                                        else
+                                            t1_ch = 0
+                                            t1 = t1_disp
+                                        end
+                                    when 2 then
+                                        t2_disp = t2
+                                        if t2_ch == 0 then
+                                            t2_ch = 1
+                                            t2 << "●"
+                                        else
+                                            t2_ch = 0
+                                            t2 = t2_disp
+                                        end
+                                    when 3 then
+                                        t3_disp = t3
+                                        if t3_ch == 0 then
+                                            t3_ch = 1
+                                            t3 << "●"
+                                        else
+                                            t3_ch = 0
+                                            t3 = t3_disp
+                                        end
+                                    when 4 then
+                                        t4_disp = t4
+                                        if t4_ch == 0 then
+                                            t4_ch = 1
+                                            t4 << "●"
+                                        else
+                                            t4_ch = 0
+                                            t4 = t4_disp
+                                        end
+                                    when 5 then
+                                        t5_disp = t5
+                                        if t5_ch == 0 then
+                                            t5_ch = 1
+                                            t5 << "●"
+                                        else
+                                            t5_ch = 0
+                                            t5 = t5_disp
+                                        end
+                                    
                                 end
-                            end
-                            if tuduki == 1 then                    
+                            if tuduki == 0 then                    
                                 break
                             end
-                        when 2 then
-                            break
-                        else
+                        
                 end
         end
 
         when 2 then
             total = win + lose
             i = 1
-            score_menu = 0
-            while score_menu != 2
+            score_menu = 999
+            while score_menu != 0
                 puts "~~~~~~~~~~~~成績画面~~~~~~~~~~~~"
                 if(total == 0)
                     p "成績がありません"
@@ -119,14 +171,15 @@ while(1)
                 }
             end
             p "成績の初期化：１"
-            p "メイン画面へ戻る：2"
+            p "メイン画面へ戻る：0"
             puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             score_menu = gets.to_i
             case score_menu
                 when 1 then
-                    p "本当に初期化してよろしいですか？ y/n"
-                    score_menu_start = gets.to_s.chomp
-                        if score_menu_start == "y"
+                    p "本当に初期化してよろしいですか？"
+                    p "1で初期化を実行、それ以外で初期化をキャンセルします"
+                    score_menu_start = gets.to_i
+                        if score_menu_start == 1
                             win = 0
                             lose = 0
                             total = 0
@@ -137,15 +190,15 @@ while(1)
             
         when 0 then
             while(1) do
-                puts "本当に終了しますか？ yで終了、nでメイン画面へ戻ります"
-                ans_end = gets.to_s
-                case ans_end.chomp
-                    when "y" then
+                puts "本当に終了しますか？ 0で終了、1でメイン画面へ戻ります"
+                ans_end = gets.to_i
+                case ans_end
+                    when 0 then
                         exit
-                    when "n" then
+                    when 1 then
                         break
                     else
-                        p "yかnで入力してください"
+                        p "0か1で入力してください"
                 end
             end
         else
