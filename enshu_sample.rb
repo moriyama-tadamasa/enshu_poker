@@ -1,8 +1,3 @@
-def ch_card(t_ch,tn,tnn)
-    if t_ch == 1
-        tn = tnn
-    end
-end
 t1_ch = 0
 t2_ch = 0
 t3_ch = 0
@@ -14,9 +9,9 @@ ary_win_card = []
 while(1)
     while(1)
         puts "~~~~~~~~~~~~メイン画面~~~~~~~~~~~~"
-        p "0.ゲームの開始"
-        p "1.成績画面"
-        p "2.終了"
+        puts "0:ゲームの開始"
+        puts "1:成績画面"
+        puts "2:終了"
         puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         sel = gets.to_i
     case sel
@@ -49,7 +44,7 @@ while(1)
                     case ans_game_menu
                         when 0 then
                             while(ans_game_trade != 0)
-                                puts "~~~~~~~~~~~~手札交換画面~~~~~~~~~~~~"
+                                puts "~~~~~~~~~~~手札交換画面~~~~~~~~~~~"
                                 puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
                                 puts "交換したいカードを選択してください"
                                 puts "選択され●がついたカードが交換されます"
@@ -142,23 +137,23 @@ while(1)
                                 puts "~~~~~~~~~~~~勝敗画面~~~~~~~~~~~~~~"
                                         card = 0
                                         if (t1 == "[s1]" && t5 == "[c1]")
-                                            p "あなたの役はワンペアです"
+                                            puts "あなたの役はワンペアです"
                                             card = 1
                                         else
-                                            p "あなたの役はノーペアです"
+                                            puts "あなたの役はノーペアです"
                                         end
                                         puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
-                                        p "COMの手札はノーペアです"
+                                        puts "COMの手札はノーペアです"
                                         puts "|s10|c8|h12|d13|h1|"
                                         if card == 1
-                                            p "あなたの勝ちです"
+                                            puts "あなたの勝ちです"
                                             win += 1
-                                            p "戦績:#{win}勝#{lose}敗"
+                                            puts "戦績:#{win}勝#{lose}敗"
                                             ary_win_card << "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
                                         else
-                                            p "あなたの負けです"
+                                            puts "あなたの負けです"
                                             lose += 1
-                                            p "戦績:#{win}勝#{lose}敗"
+                                            puts "戦績:#{win}勝#{lose}敗"
                                         end
                                         
                                         t1_ch = 0
@@ -166,13 +161,12 @@ while(1)
                                         t3_ch = 0
                                         t4_ch = 0
                                         t5_ch = 0
-                                        puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                                         tuduki = 10
                                         while(tuduki != 0 && tuduki != 1)
                                             puts "~~~~~~~~~~~~続行画面~~~~~~~~~~~~~~"
-                                            p "続けますか?"
-                                            p "0:続行"
-                                            p "1:メインメニューへ"
+                                            puts "続けますか?"
+                                            puts "0:続行"
+                                            puts "1:メインメニューへ"
                                             puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                                             tuduki = gets.to_i
                                             if tuduki != 0 && tuduki != 1
@@ -196,21 +190,21 @@ while(1)
                 i = 1
                 puts "~~~~~~~~~~~~成績画面~~~~~~~~~~~~~~"
                 if(total == 0)
-                    p "成績がありません"
+                    puts "成績がありません"
                 else
-                    p "#{total}戦#{win}勝#{lose}敗"
+                    puts "#{total}戦#{win}勝#{lose}敗"
                     1.upto(win){|x|
-                    p "#{i}勝目"
+                    puts "#{i}勝目"
                     if win > 0
-                        p ary_win_card[i-1]
+                        puts ary_win_card[i-1]
                     end
                     if win > i then
                         i += i
                     end
                 }
             end
-            p "成績の初期化：１"
-            p "メイン画面へ戻る：0"
+            puts "成績の初期化：１"
+            puts "メイン画面へ戻る：0"
             puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             score_menu = gets.to_i
             case score_menu
@@ -218,9 +212,9 @@ while(1)
                     score_menu_start = 10
                     while(score_menu_start != 0 && score_menu_start != 1)
                         puts "~~~~~~~~~成績初期化確認画面~~~~~~~"
-                        p "本当に初期化してよろしいですか？"
-                        p "0:初期化をキャンセル"
-                        p "1:初期化を実行"
+                        puts "本当に初期化してよろしいですか？"
+                        puts "0:初期化をキャンセル"
+                        puts "1:初期化を実行"
                         puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                         score_menu_start = gets.to_i
                             if score_menu_start == 1
@@ -230,7 +224,7 @@ while(1)
                                 ary_win_card.clear
                                 i=1
                             elsif score_menu_start !=0
-                                p "1か0で入力してください"
+                                puts "1か0で入力してください"
                             end
                     end
             end
@@ -250,11 +244,11 @@ while(1)
                     when 1 then
                         exit
                     else
-                        p "0か1で入力してください"
+                        puts "0か1で入力してください"
                 end
             end
         else
-            p "0~2の数字で入力してください"
+            puts "0~2の数字で入力してください"
     end
 
 end
