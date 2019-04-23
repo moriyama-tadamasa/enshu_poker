@@ -1,10 +1,81 @@
-t1_ch = 0
-t2_ch = 0
-t3_ch = 0
-t4_ch = 0
-t5_ch = 0
+def ch_card(t_ch,tn,tnn)
+    if t_ch == 1
+        tn = tnn
+    end
+end
+
+
+require "dbi"
+
+$dbh = DBI.connect('DBI:SQLite3:porker.db')
+
+
+class Pokerdraw
+    def hudajunbi()
+        deck = []
+        $dbh.do("DROP TABLE IF EXISTS card")
+        $dbh.do("CREATE TABLE card(id integer primary key,number intger,suit char(20))") 
+        $dbh.do("DROP TABLE IF EXISTS mcard")
+        $dbh.do("CREATE TABLE mcard(id integer primary key,mcard )") 
+        $dbh.do("DROP TABLE IF EXISTS ncard")
+        $dbh.do("CREATE TABLE ncard(id integer primary key,ncard )") 
+        #トランプ全部つっこむとこ
+        1.upto(13){|i|
+        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"D")
+        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"H")
+        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"S")
+        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"C")
+        }
+        $dbh.select_all("select number,suit from card"){|crd|
+            deck += [crd[1]+crd[0]]
+        }
+        return deck
+    end
+
+    def fulldraw()
+        fb = []
+        dc = ""
+        #トランプ抜くとこ
+        5.times{|j|
+            while(1)
+                r = rand(52)
+                $dbh.select_all("select number,suit from card where id = #{r}"){|crd|
+                    dc = [crd[1]+crd[0]]
+                }
+                if dc != nil
+                    break
+                end
+            end
+            fb += dc
+            $dbh.do("delete from card where id = ?",r)
+        }
+        return fb
+    end
+
+    def draw()
+        sb = ""
+        sc = ""
+        #トランプ抜くとこ
+        while(1)
+            r = rand(52)
+            $dbh.select_all("select number,suit from card where id = #{r}"){|crd|
+                sc = crd[1]+crd[0]
+                p sc
+            }
+            if sc != nil || sc != 0
+                break
+            end
+        end
+        sb = sc
+        $dbh.do("delete from card where id = ?",r)
+        return sb
+    end
+end
+
 win = 0
 lose = 0
+mcard = []
+ncard = []
 ary_win_card = []
 while(1)
     while(1)
@@ -17,44 +88,33 @@ while(1)
     case sel
         when 0 then
             while(1)
-                t1 = "[s1]"
-                t1_disp = t1
-                t2 = "[c2]"
-                t2_disp = t2
-                t3 = "[h3]"
-                t3_disp = t3
-                t4 = "[d5]"
-                t4_disp = t4
-                t5 = "[s6]"
-                t5_disp = t5
-                t6 = "[c7]"
-                t7 = "[h9]"
-                t8 = "[d10]"
-                t9 = "[s11]"
-                t10 = "[c1]"
-
+                tch = Array.new(5,0)
+                p tch
+                tcha = ["","","","",""]
+                dbc = Pokerdraw.new
+                dbc.hudajunbi()
+                mcard = dbc.fulldraw()
+                ncard = dbc.fulldraw()
                 puts "~~~~~~~~~~~~ゲーム画面~~~~~~~~~~~~"
                 puts "現在の手札"
-                puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
-                puts "手札の交換：0"
-                puts "メイン画面に戻る：1"
+                puts "[[#{tcha[0]+mcard[0]}]|[#{tcha[1]+mcard[1]}]|[#{tcha[2]+mcard[2]}]|[#{tcha[3]+mcard[3]}]|[#{tcha[4]+mcard[4]}]]"
+                puts "手札の交換：1"
+                puts "メイン画面に戻る：0"
                 puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                 ans_game_menu = gets.to_i
                 ans_game_trade = 99
                     case ans_game_menu
                         when 0 then
                             while(ans_game_trade != 0)
-                                puts "~~~~~~~~~~~手札交換画面~~~~~~~~~~~"
-                                puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
-                                puts "交換したいカードを選択してください"
-                                puts "選択され●がついたカードが交換されます"
-                                print "1:#{t1}  "
-                                print "2:#{t2}  "
-                                puts "3:#{t3}"
-                                print "4:#{t4}  "
-                                puts "5:#{t5}"
-                                puts "0:カードの交換を実行する"
-                                puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                                puts "現在の手札"
+                                puts "[[#{tcha[0]+mcard[0]}]|[#{tcha[1]+mcard[1]}]|[#{tcha[2]+mcard[2]}]|[#{tcha[3]+mcard[3]}]|[#{tcha[4]+mcard[4]}]]"
+                                puts "どのカードを交換しますか？"
+                                puts "1:#{mcard[0]}を交換する"
+                                puts "2:#{mcard[1]}を交換する"
+                                puts "3:#{mcard[2]}を交換する"
+                                puts "4:#{mcard[3]}を交換する"
+                                puts "5:#{mcard[4]}を交換する"
+                                puts "0:カードの交換を終了する"
                                 ans_game_trade = gets.to_i
                                 case ans_game_trade
                                     when 0 then
@@ -77,102 +137,105 @@ while(1)
                                                 end
                                             end
                                     when 1 then
-                                        if t1_ch == 0 then
-                                            t1_ch = 1
-                                            t1 = t1 + "●"
+                                        if tch[0] == 0 then
+                                            tch[0] = 1
+                                            tcha[0] =  "●"
                                         else
-                                            t1_ch = 0
-                                            t1 = t1_disp
+                                            tch[0] = 0
+                                            tcha[0] = ""
                                         end
                                     when 2 then
-                                        if t2_ch == 0 then
-                                            t2_ch = 1
-                                            t2 = t2 + "●"
+                                        if tch[1] == 0 then
+                                            tch[1] = 1
+                                            tcha[1] =  "●"
                                         else
-                                            t2_ch = 0
-                                            t2 = t2_disp
+                                            tch[1] = 0
+                                            tcha[1] = ""
                                         end
                                     when 3 then
-                                        if t3_ch == 0 then
-                                            t3_ch = 1
-                                            t3 = t3 + "●"
+                                        if tch[2] == 0 then
+                                            tch[2] = 1
+                                            tcha[2] =  "●"
                                         else
-                                            t3_ch = 0
-                                            t3 = t3_disp
+                                            tch[2] = 0
+                                            tcha[2] = ""
                                         end
                                     when 4 then
-                                        if t4_ch == 0 then
-                                            t4_ch = 1
-                                            t4 = t4 + "●"
+                                        if tch[3] == 0 then
+                                            tch[3] = 1
+                                            tcha[3] =  "●"
                                         else
-                                            t4_ch = 0
-                                            t4 = t4_disp
+                                            tch[3] = 0
+                                            tcha[3] = ""
                                         end
                                     when 5 then
-                                        if t5_ch == 0 then
-                                            t5_ch = 1
-                                            t5 = t5 + "●"
+                                        if tch[4] == 0 then
+                                            tch[4] = 1
+                                            tcha[4] =  "●"
                                         else
-                                            t5_ch = 0
-                                            t5 = t5_disp
+                                            tch[4] = 0
+                                            tcha[4] = ""
                                         end
                                     else
+
+                                    end
                                 end
                             end
-                                if t1_ch == 1
-                                    t1 = t6
+
+                            5.times{
+                                if tch[0] == 1
+                                    mcard[0] = dbc.draw()
+                                    p mcard
+                                    tch[0] = 0
                                 end
-                                if t2_ch == 1
-                                    t2 = t7
+                                if tch[1]  == 1
+                                    mcard[1] = dbc.draw()
+                                    tch[1] = 0
+                                    p mcard
                                 end
-                                if t3_ch == 1
-                                    t3 = t8
+                                if tch[2] == 1
+                                    mcard[2] = dbc.draw()
+                                    tch[2] = 0
+                                    p mcard
                                 end
-                                if t4_ch == 1
-                                    t4 = t9
+                                if tch[3] == 1
+                                    mcard[3] = dbc.draw()
+                                    tch[3] = 0
+                                    p mcard
                                 end
-                                if t5_ch == 1
-                                    t5 = t10
+                                if tch[4] == 1
+                                    mcard[4] = dbc.draw()
+                                    p mcard
+                                    tch[4] = 0
                                 end
-                                puts "~~~~~~~~~~~~勝敗画面~~~~~~~~~~~~~~"
+
+                                }
+                                        puts "~~~~~~~~~~~~勝敗画面~~~~~~~~~~~~"
                                         card = 0
-                                        if (t1 == "[s1]" && t5 == "[c1]")
-                                            puts "あなたの役はワンペアです"
+                                        if (mcard[0] == "[s1]" && mcard[4] == "[c1]")
+                                            p "あなたの役はワンペアです"
                                             card = 1
                                         else
                                             puts "あなたの役はノーペアです"
                                         end
-                                        puts "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
-                                        puts "COMの手札はノーペアです"
-                                        puts "|s10|c8|h12|d13|h1|"
+                                        puts "[[#{mcard[0]}]|[#{mcard[1]}]|[#{mcard[2]}]|[#{mcard[3]}]|[#{mcard[4]}]]"
+                                        p "COMの手札はノーペアです"
+                                        puts "[[s10]|[c8]|[h12]|[d13]|[h1]]"
                                         if card == 1
                                             puts "あなたの勝ちです"
                                             win += 1
-                                            puts "戦績:#{win}勝#{lose}敗"
-                                            ary_win_card << "[#{t1}|#{t2}|#{t3}|#{t4}|#{t5}]"
+                                            p "戦績:#{win}勝#{lose}敗"
+                                            ary_win_card << "[[#{mcard[0]}]|[#{mcard[1]}]|[#{mcard[2]}]|[#{mcard[3]}]|[#{mcard[4]}]"
+                                            p ary_win_card
                                         else
                                             puts "あなたの負けです"
                                             lose += 1
                                             puts "戦績:#{win}勝#{lose}敗"
                                         end
                                         
-                                        t1_ch = 0
-                                        t2_ch = 0
-                                        t3_ch = 0
-                                        t4_ch = 0
-                                        t5_ch = 0
-                                        tuduki = 10
-                                        while(tuduki != 0 && tuduki != 1)
-                                            puts "~~~~~~~~~~~~続行画面~~~~~~~~~~~~~~"
-                                            puts "続けますか?"
-                                            puts "0:続行"
-                                            puts "1:メインメニューへ"
-                                            puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                                            tuduki = gets.to_i
-                                            if tuduki != 0 && tuduki != 1
-                                                puts "0か1で入力してください"
-                                            end
-                                        end
+                                        puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                                        p "続けますか? 0でメインメニュー、0以外で続けます"
+                                        tuduki = gets.to_i
 
                             if tuduki == 1 then                    
                                 break
@@ -180,7 +243,7 @@ while(1)
                         when 1 then
                             break
                 end
-        end
+
 
         when 1 then
             total = win + lose
