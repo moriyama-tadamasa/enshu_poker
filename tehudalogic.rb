@@ -6,26 +6,25 @@ require "dbi"
 
 $dbh = DBI.connect('DBI:SQLite3:porker.db')
 
-s = []
-t = []
+
 class Pokerdraw
     def hudajunbi()
         deck = []
         $dbh.do("DROP TABLE IF EXISTS card")
-        $dbh.do("CREATE TABLE card(id integer primary key,card char(20))") 
+        $dbh.do("CREATE TABLE card(id integer primary key,number intger,suit char(20))") 
         $dbh.do("DROP TABLE IF EXISTS mcard")
         $dbh.do("CREATE TABLE mcard(id integer primary key,mcard )") 
         $dbh.do("DROP TABLE IF EXISTS ncard")
         $dbh.do("CREATE TABLE ncard(id integer primary key,ncard )") 
         #トランプ全部つっこむとこ
         1.upto(13){|i|
-        $dbh.do("insert into card(card) VALUES(?)","D#{i}")
-        $dbh.do("insert into card(card) VALUES(?)","H#{i}")
-        $dbh.do("insert into card(card) VALUES(?)","S#{i}")
-        $dbh.do("insert into card(card) VALUES(?)","C#{i}")
+        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"D")
+        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"H")
+        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"S")
+        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"C")
         }
-        $dbh.select_all("select card from card"){|crd|
-            deck += [crd[0]]
+        $dbh.select_all("select number,suit from card"){|crd|
+            deck << [crd[1],crd[0]]
         }
         return deck
     end
@@ -37,33 +36,34 @@ class Pokerdraw
         5.times{|j|
             while(1)
                 r = rand(52)
-                $dbh.select_all("select card from card where id = #{r}"){|crd|
-                    dc = [crd[0]]
+                $dbh.select_all("select number,suit from card where id = #{r}"){|crd|
+                    dc = [crd[1],crd[0]]
                 }
                 if dc != nil
                     break
                 end
             end
-            fb += dc
+            fb << dc
             $dbh.do("delete from card where id = ?",r)
         }
         return fb
     end
 
     def draw()
-        sb = []
+        sb = ""
         sc = ""
         #トランプ抜くとこ
         while(1)
             r = rand(52)
-            $dbh.select_all("select card from card where id = #{r}"){|crd|
-                sc = [crd[0]]
+            $dbh.select_all("select number,suit from card where id = #{r}"){|crd|
+                sc = crd[1]+crd[0]
+                p sc
             }
-            if sc != nil
+            if sc != nil || sc != 0
                 break
             end
         end
-        sb += sc
+        sb = sc
         $dbh.do("delete from card where id = ?",r)
         return sb
     end
