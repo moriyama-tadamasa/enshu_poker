@@ -100,8 +100,8 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
     end
 end
 
-ary = []
-ary2 = []
-ary = [["C",1],["S",2],["H",3],["C",4],["D",5]]
-ary2 = [["D", 1],["S", 2],["C", 4],["D", 3],["H", 5]]
-win_lose(ary,ary2,5,5)
+ary_user = []
+ary_com = []
+ary_user = [["C",1],["S",2],["H",3],["C",4],["D",5]]
+ary_com = [["D", 2],["S", 3],["C", 4],["D", 6],["H", 5]]
+win_lose(ary_user,ary_com,5,5)
