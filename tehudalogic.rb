@@ -14,13 +14,13 @@ class Pokerdraw
         $dbh.do("CREATE TABLE card(id integer primary key,suit char(20),number integer)") 
         #トランプ全部つっこむとこ
         1.upto(13){|i|
-        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"D")
-        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"H")
-        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"S")
-        $dbh.do("insert into card(number,suit) VALUES(?,?)",i,"C")
+        $dbh.do("insert into card(suit,number) VALUES(?,?)","D",i)
+        $dbh.do("insert into card(suit,number) VALUES(?,?)","H",i)
+        $dbh.do("insert into card(suit,number) VALUES(?,?)","S",i)
+        $dbh.do("insert into card(suit,number) VALUES(?,?)","C",i)
         }
         $dbh.select_all("select number,suit from card"){|crd|
-            deck << [crd[0],crd[1]]
+            deck << [crd[1],crd[0]]
         }
         return deck
     end
@@ -35,7 +35,7 @@ class Pokerdraw
             while(1)
                 r = rand(52)
                 $dbh.select_all("select number,suit from card where id = ?",r){|crd|
-                    dc = crd[0],crd[1]
+                    dc = crd[1],crd[0]
                 }
                 if dc != nil
                     $dbh.do("insert into #{name}(number,suit) values(?,?)",dc[0],dc[1])
@@ -81,12 +81,13 @@ class Pokerdraw
                 #重複してるカードの等級
                 tdp = lll[0].to_i
             }
-            
             5.times{|l|
-                if drw[l] != tdp
-                    drw[l] = draw()
+                if drw[0] != tdp
+                    drw[0] = draw()
+                    p drw[0]
                 else
-                    drw[l] = drw[l]
+
+                    p drw[l]
                 end
             }
         else
@@ -137,35 +138,15 @@ tlw = pd.draw()
 test = []
 test = pd.fulldraw("ncard")
 puts "jaberunulualalalalala"
-p test
+print test
 puts"bananaajilililili"
 puts ""
 
 pd.npcchoice(test)
 
+ sbwwww = gets
 
 puts "gaba"
 p test
 puts "GABA"
 
-
-#p pdw
-#if pdw ==4 
-#    break
-#    else
- #       if pdw <=2
-  #          5.times{|i|
-#
- #           p chanf
-  #          }
-#
-
-
-#puts "kusozako"
-#puts tdp
-#puts "gabagaba"
-
-#p pdw
-#tcw = "trw[1]"+"tlw[1]"
-
-#p tcw
