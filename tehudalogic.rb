@@ -44,7 +44,6 @@ class Pokerdraw
             end
             fb << dc
             $dbh.do("delete from card where id = ?",r) 
-
         }
         return fb
     end
@@ -82,6 +81,7 @@ class Pokerdraw
                 #重複してるカードの等級
                 tdp = lll[0].to_i
             }
+            
             5.times{|l|
                 if drw[l] != tdp
                     drw[l] = draw()
