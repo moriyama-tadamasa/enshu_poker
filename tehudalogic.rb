@@ -70,7 +70,6 @@ class Pokerdraw
 end
 
 
-
 #以下確認用
 
 pd = Pokerdraw.new()

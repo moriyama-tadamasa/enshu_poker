@@ -4,6 +4,7 @@ def ch_card(t_ch,tn,tnn)
     end
 end
 
+
 require "dbi"
 
 $dbh = DBI.connect('DBI:SQLite3:porker.db')
