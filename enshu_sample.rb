@@ -80,15 +80,13 @@ ary_win_card = []
 while(1)
     while(1)
         puts "~~~~~~~~~~~~メイン画面~~~~~~~~~~~~"
-
-        p "1.ゲームの開始"
-        p "2.成績画面"
-        p "0.終了"
-
+        puts "0:ゲームの開始"
+        puts "1:成績画面"
+        puts "2:終了"
         puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         sel = gets.to_i
     case sel
-        when 1 then
+        when 0 then
             while(1)
                 tch = Array.new(5,0)
                 p tch
@@ -107,8 +105,6 @@ while(1)
                 ans_game_trade = 99
                     case ans_game_menu
                         when 0 then
-                            break
-                        when 1 then
                             while(ans_game_trade != 0)
                                 puts "現在の手札"
                                 puts "[[#{tcha[0]+mcard[0]}]|[#{tcha[1]+mcard[1]}]|[#{tcha[2]+mcard[2]}]|[#{tcha[3]+mcard[3]}]|[#{tcha[4]+mcard[4]}]]"
@@ -120,17 +116,26 @@ while(1)
                                 puts "5:#{mcard[4]}を交換する"
                                 puts "0:カードの交換を終了する"
                                 ans_game_trade = gets.to_i
-                            
                                 case ans_game_trade
                                     when 0 then
-                                        puts "本当によろしいですか？"
-                                        puts "0でカードの交換を終了します。0以外で継続します"
-                                        ans_game_trade_end = gets.to_i
-                                        if ans_game_trade_end == 0 then
-                                            ans_game_trade = 0
-                                        else
-                                            ans_game_trade = 10
-                                        end
+                                            ans_game_trade_end = 10
+                                            while(1)
+                                                puts "~~~~~~~~~~~~交換終了確認画面~~~~~~"
+                                                puts "本当に交換してよろしいですか？"
+                                                puts "1:実行"
+                                                puts "0:交換を継続"
+                                                ans_game_trade_end = gets.to_i
+                                                
+                                                if ans_game_trade_end == 1
+                                                    ans_game_trade = 0
+                                                    break
+                                                elsif ans_game_trade_end == 0
+                                                    ans_game_trade = 10
+                                                    break
+                                                else 
+                                                    puts "0か1で入力してください"
+                                                end
+                                            end
                                     when 1 then
                                         if tch[0] == 0 then
                                             tch[0] = 1
@@ -211,85 +216,102 @@ while(1)
                                             p "あなたの役はワンペアです"
                                             card = 1
                                         else
-                                            p "あなたの役はノーペアです"
+                                            puts "あなたの役はノーペアです"
                                         end
                                         puts "[[#{mcard[0]}]|[#{mcard[1]}]|[#{mcard[2]}]|[#{mcard[3]}]|[#{mcard[4]}]]"
                                         p "COMの手札はノーペアです"
                                         puts "[[s10]|[c8]|[h12]|[d13]|[h1]]"
                                         if card == 1
-                                            p "あなたの勝ちです"
+                                            puts "あなたの勝ちです"
                                             win += 1
                                             p "戦績:#{win}勝#{lose}敗"
                                             ary_win_card << "[[#{mcard[0]}]|[#{mcard[1]}]|[#{mcard[2]}]|[#{mcard[3]}]|[#{mcard[4]}]"
                                             p ary_win_card
                                         else
-                                            p "あなたの負けです"
+                                            puts "あなたの負けです"
                                             lose += 1
-                                            p "戦績:#{win}勝#{lose}敗"
+                                            puts "戦績:#{win}勝#{lose}敗"
                                         end
                                         
                                         puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                                         p "続けますか? 0でメインメニュー、0以外で続けます"
                                         tuduki = gets.to_i
 
-                            if tuduki == 0 then                    
+                            if tuduki == 1 then                    
                                 break
                             end
-                        
+                        when 1 then
+                            break
                 end
 
 
-        when 2 then
+        when 1 then
             total = win + lose
             i = 1
             score_menu = 999
             while score_menu != 0
-                puts "~~~~~~~~~~~~成績画面~~~~~~~~~~~~"
+                i = 1
+                puts "~~~~~~~~~~~~成績画面~~~~~~~~~~~~~~"
                 if(total == 0)
-                    p "成績がありません"
+                    puts "成績がありません"
                 else
-                    p "#{total}戦#{win}勝#{lose}敗"
+                    puts "#{total}戦#{win}勝#{lose}敗"
                     1.upto(win){|x|
-                    p "#{i}勝目"
+                    puts "#{i}勝目"
                     if win > 0
-                        p ary_win_card[i-1]
+                        puts ary_win_card[i-1]
                     end
-                    i += i
+                    if win > i then
+                        i += i
+                    end
                 }
             end
-            p "成績の初期化：１"
-            p "メイン画面へ戻る：0"
+            puts "成績の初期化：１"
+            puts "メイン画面へ戻る：0"
             puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             score_menu = gets.to_i
             case score_menu
                 when 1 then
-                    p "本当に初期化してよろしいですか？"
-                    p "1で初期化を実行、それ以外で初期化をキャンセルします"
-                    score_menu_start = gets.to_i
-                        if score_menu_start == 1
-                            win = 0
-                            lose = 0
-                            total = 0
-                            ary_win_card.clear
-                        end
+                    score_menu_start = 10
+                    while(score_menu_start != 0 && score_menu_start != 1)
+                        puts "~~~~~~~~~成績初期化確認画面~~~~~~~"
+                        puts "本当に初期化してよろしいですか？"
+                        puts "0:初期化をキャンセル"
+                        puts "1:初期化を実行"
+                        puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                        score_menu_start = gets.to_i
+                            if score_menu_start == 1
+                                win = 0
+                                lose = 0
+                                total = 0
+                                ary_win_card.clear
+                                i=1
+                            elsif score_menu_start !=0
+                                puts "1か0で入力してください"
+                            end
+                    end
             end
         end
             
-        when 0 then
+        when 2 then
             while(1) do
-                puts "本当に終了しますか？ 0で終了、1でメイン画面へ戻ります"
+                puts "~~~~~~~~~ゲーム終了確認画面~~~~~~~"
+                puts "本当に終了しますか？"
+                puts "0:メイン画面へ戻る"
+                puts "1:終了する"
+                puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                 ans_end = gets.to_i
                 case ans_end
                     when 0 then
-                        exit
-                    when 1 then
                         break
+                    when 1 then
+                        exit
                     else
-                        p "0か1で入力してください"
+                        puts "0か1で入力してください"
                 end
             end
         else
-            p "0~2の数字で入力してください"
+            puts "0~2の数字で入力してください"
     end
 
 end
