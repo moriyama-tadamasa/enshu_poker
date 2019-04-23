@@ -13,10 +13,8 @@ def yaku_hantei(ary)
             suit_count += 1
         end
     }
-    #p "suit_count -> #{suit_count}"
     ary_num_sort = []
     ary_num_sort = ary_num.sort
-    #p "ary_num_sort->#{ary_num_sort}"
     stra_count = 1
     if ary_num_sort[0] == 1 then
         if ary_num_sort[1] == 10 then
@@ -30,7 +28,8 @@ def yaku_hantei(ary)
     end
     #p "royal_stra_count->#{royal_stra_count}"
     if royal_stra_count == 5 && suit_count == 5 then
-        return puts "ロイヤルストレートフラッシュ!"
+        puts "ロイヤルストレートフラッシュ!"
+        return 10
     end
     puts "ロイヤルストレートフラッシュ判定失敗"
     #~~~~~~~~~~~~~~~以下ストレートフラッシュ判定~~~~~~~~~~~~~~~~~~
@@ -41,7 +40,8 @@ def yaku_hantei(ary)
         end
     }
     if stra_count == 5 && suit_count == 5 then
-        return puts "ストレートフラッシュ!"
+        puts "ストレートフラッシュ!"
+        return 9
     end
     puts "ストレートフラッシュ判定失敗"
     #~~~~~~~~~~~~~~~~以下フォーカード判定~~~~~~~~~~~~~~~~~~~~
@@ -66,7 +66,8 @@ def yaku_hantei(ary)
         else
     end
     if four_card_count == 4 then
-        return puts "フォーカード!"
+        puts "フォーカード!"
+        return 8
     end
     puts "フォーカード判定失敗"
     #~~~~~~~~~~~~~~~~~~~以下フルハウス判定~~~~~~~~~~~~~~~~~~~
@@ -86,26 +87,30 @@ def yaku_hantei(ary)
             end
         }
         if ary_full[0] == ary_full[1] then
-            return puts "フルハウス!"
+            puts "フルハウス!"
+            return 7
         end
     end
     puts "フルハウス判定失敗"
     #~~~~~~~~~~~~~~~~~~~以下フラッシュ判定~~~~~~~~~~~~~~~~~~~
     puts "以下フラッシュ判定開始"
     if suit_count == 5 then
-        return puts "フラッシュ!"
+        puts "フラッシュ!"
+        return 6
     end
     puts "フラッシュ判定失敗"
     #~~~~~~~~~~~~~~~~~~~~以下ストレート判定~~~~~~~~~~~~~~~~~~
     puts "以下ストレート判定開始"
     if stra_count == 5 then
-        return puts "ストレート!"
+        puts "ストレート!"
+        return 5
     end
     puts "ストレート判定失敗"
     #~~~~~~~~~~~~~~~~~~~~以下スリーカード判定~~~~~~~~~~~~~~~~
     puts "以下スリーカード判定開始"
     if three_card_count == 3 then
-        return puts "スリーカード!"
+        puts "スリーカード!"
+        return 4
     end
     puts "スリーカード判定失敗"
     #~~~~~~~~~~~~~~~~~~~~~以下ツーペア判定~~~~~~~~~~~~~~~~~~~~~
@@ -117,18 +122,21 @@ def yaku_hantei(ary)
         end
     }
     if pair == 2 then
-        return puts "ツーペア!"
+        puts "ツーペア!"
+        return 3
     end
     puts "ツーペア判定失敗"
     #~~~~~~~~~~~~~~~~~~~~~~以下ワンペア判定~~~~~~~~~~~~~~~~~
     puts "以下ワンペア判定開始"
     if pair == 1 then
-        return puts "ワンペア!"
+        puts "ワンペア!"
+        return 2
     end
     puts "ワンペア判定失敗"
     #~~~~~~~~~~~~~~~~~~~~~~以下ノーペア判定~~~~~~~~~~~~~~~~~
     puts "以上の役に全て当てはまらないのでノーペア判定です"
-    return puts "ノーペア"
+    puts "ノーペア"
+    return 1
 end
 
 ary = []
