@@ -11,7 +11,7 @@ class Pokerdraw
     def hudajunbi()
         deck = []
         $dbh.do("DROP TABLE IF EXISTS card")
-        $dbh.do("CREATE TABLE card(id integer primary key,number intger,suit char(20))") 
+        $dbh.do("CREATE TABLE card(id integer primary key,number integer,suit char(20))") 
         $dbh.do("DROP TABLE IF EXISTS mcard")
         $dbh.do("CREATE TABLE mcard(id integer primary key,mcard )") 
         $dbh.do("DROP TABLE IF EXISTS ncard")
@@ -31,13 +31,13 @@ class Pokerdraw
 
     def fulldraw()
         fb = []
-        dc = ""
+        dc = []
         #トランプ抜くとこ
         5.times{|j|
             while(1)
                 r = rand(52)
-                $dbh.select_all("select number,suit from card where id = #{r}"){|crd|
-                    dc = [crd[1],crd[0]]
+                $dbh.select_all("select number,suit from card where id = ?",r){|crd|
+                    dc = crd[1],crd[0]
                 }
                 if dc != nil
                     break
@@ -50,13 +50,13 @@ class Pokerdraw
     end
 
     def draw()
-        sb = ""
-        sc = ""
+        sb = []
+        sc = []
         #トランプ抜くとこ
         while(1)
             r = rand(52)
             $dbh.select_all("select number,suit from card where id = #{r}"){|crd|
-                sc = crd[1]+crd[0]
+                sc = crd[1],crd[0]
                 p sc
             }
             if sc != nil || sc != 0
@@ -68,6 +68,12 @@ class Pokerdraw
         return sb
     end
 end
+
+
+
+
+
+
 
 
 #以下確認用
@@ -92,8 +98,21 @@ p s
 
 t = pd.draw()
 
-$dbh.select_all("select card from card"){|crd|
-    puts crd[0]
+$dbh.select_all("select suit,number from card"){|crd|
+    print "#{crd[0]}#{crd[1]}\n"
 }
 puts ""
 puts t[0]
+
+trw = pd.draw()
+tlw = pd.draw()
+
+tcw = trw[1] + tlw[1]
+
+p tcw
+
+npc = pd.fulldraw()
+
+
+
+
