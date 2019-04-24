@@ -4,26 +4,22 @@
 
 require "dbi"
 
-$dbh = DBI.connect('DBI:SQLite3:poker.db')
+$dbh = DBI.connect('DBI:SQLite3:porker.db')
 
 
 class Pokerdraw
     def hudajunbi()
         deck = []
-        $dbh.do("DROP TABLE IF EXISTS card")
-        $dbh.do("CREATE TABLE card(id integer primary key,number integer,suit char(20))")
-        $dbh.do("DROP TABLE IF EXISTS mcard")
-        $dbh.do("CREATE TABLE mcard(id integer primary key,number integer,suit char(20))")
-        $dbh.do("DROP TABLE IF EXISTS ncard")
-        $dbh.do("CREATE TABLE ncard(id integer primary key,number integer,suit char(20))")
+        $dbh.do("DROP TABLE IF EXISTS deck")
+        $dbh.do("CREATE TABLE deck(id integer primary key,suit char(20),number integer)")
         #トランプ全部つっこむとこ
         1.upto(13){|i|
-        $dbh.do("insert into card(suit,number) VALUES(?,?)","D",i)
-        $dbh.do("insert into card(suit,number) VALUES(?,?)","H",i)
-        $dbh.do("insert into card(suit,number) VALUES(?,?)","S",i)
-        $dbh.do("insert into card(suit,number) VALUES(?,?)","C",i)
+        $dbh.do("insert into deck(suit,number) VALUES(?,?)","D",i)
+        $dbh.do("insert into deck(suit,number) VALUES(?,?)","H",i)
+        $dbh.do("insert into deck(suit,number) VALUES(?,?)","S",i)
+        $dbh.do("insert into deck(suit,number) VALUES(?,?)","C",i)
         }
-        $dbh.select_all("select number,suit from card"){|crd|
+        $dbh.select_all("select number,suit from deck"){|crd|
             deck << [crd[1],crd[0]]
         }
         return deck
@@ -31,43 +27,66 @@ class Pokerdraw
 
     def fulldraw(name)
         fb = []
-        dc = 0
+        $dbh.do("DROP TABLE IF EXISTS #{name}")
+        $dbh.do("CREATE TABLE #{name}(id integer primary key,suit char(20),number integer)")
         #トランプ抜くとこ
         5.times{|j|
             while(1)
+                dc = 0
                 r = rand(52)
-                $dbh.select_all("select number,suit from card where id = ?",r){|crd|
-                    dc = crd[1],crd[0]
+                $dbh.select_all("select suit,number from deck where id = ?",r){|crd|
+                    dc = crd[0],crd[1]
                 }
                 if dc != nil && dc != 0 && dc !=[]
-                    $dbh.do("insert into #{name}(number,suit) values(?,?)",dc[1],dc[0])
+                    $dbh.do("insert into #{name}(suit,number) values(?,?)",dc[0],dc[1])
                     break
                 end
             end
             fb << dc
-            $dbh.do("delete from card where id = ?",r)
+            $dbh.do("delete from deck where id = ?",r)
         }
         return fb
     end
 
     def draw()
         sb = 0
-        sc = 0
         #トランプ抜くとこ
         while(1)
+            sc = 0
             r = rand(52)
-            $dbh.select_all("select number,suit from card where id = #{r}"){|crd|
-                sc = crd[1],crd[0]
+            $dbh.select_all("select suit,number from deck where id = #{r}"){|crd|
+                sc = crd[0],crd[1]
+            }
+            if sc != nil && sc != 0 && sc !=[]
+                $dbh.do("delete from deck where id = ?",r)
+                break
+            end
+        end
+        #puts "ドローしました"
+        sb = sc
+        return sb
+    end
+
+    def pdraw(cid)
+        #プレイヤー専用のやーつ
+        sb = 0
+        while(1)
+            sc = 0
+            r = rand(52)
+            $dbh.select_all("select suit,number from deck where id = #{r}"){|crd|
+                sc = crd[0],crd[1]
             }
             if sc != nil && sc != 0 && sc !=[]
                 break
             end
         end
-        puts "ドローしました"
+        $dbh.do("update playercard set suit=?,number=? where id=#{cid}",sc[0],sc[1])
         sb = sc
-        $dbh.do("delete from card where id = ?",r)
         return sb
     end
+
+
+
 =begin
     def npcchoice(drw)
         pdw = 0
@@ -106,25 +125,25 @@ class Pokerdraw
         return t
     end
 =end
-    def npcchoice(drw)
+    def comchoice(drw)
         pdw = 0
         tdp = 0
-        p drw
-        $dbh.select_all("select count(number) from ncard group by number having 1<count(*)"){|npcard|
+        #p drw
+        $dbh.select_all("select count(number) from comcard group by number having 1<count(*)"){|npcard|
         #重複している数
             pdw = npcard[0].to_i
             #print "pdwの値"
             #p pdw
         }
         if pdw == 0
-            drw = fulldraw("ncard")
+            drw = fulldraw("comcard")
         else
             if pdw > 1
                 if pdw == 4
                     return drw
                 end
                 pdw.times{|d|
-                    $dbh.select_all("select number from ncard group by number having 1 < count(number)"){|lll|
+                    $dbh.select_all("select number from comcard group by number having 1 < count(number)"){|lll|
                         #重複してるカードの等級
                         tdp = lll[0].to_i
                         #p tdp
@@ -152,6 +171,11 @@ class Pokerdraw
             end
         end
         #p drw
+        $dbh.do("DROP TABLE IF EXISTS comcard")
+        $dbh.do("CREATE TABLE comcard(id integer primary key,suit char(20),number integer)")
+        drw.each{|d|
+        $dbh.do("insert into comcard(suit,number) values(?,?)",d[0],d[1])
+        }
         return drw
     end
 
@@ -196,27 +220,36 @@ pd.hudajunbi()
 
 test1 = []
 
-test1 = pd.fulldraw("mcard")
+test1 = pd.fulldraw("playercard")
 
 test = []
 
-test = pd.fulldraw("ncard")
+test = pd.fulldraw("comcard")
 
 puts "-----変換前-----"
 
-print test
+print "test1#{test1}\n"
+
+print "test#{test}"
 
 puts"\n------------"
+
 puts ""
 
-test = pd.npcchoice(test)
+sbwwww = gets
 
- sbwwww = gets
+test1[0] = pd.pdraw(1)
+
+test = pd.comchoice(test)
 
 
- puts "-----変換後-----"
 
- print test
+
+puts "-----変換後-----"
+
+print "test1#{test1}\n"
+
+print "test#{test}"
  
- puts"\n------------"
+puts"\n------------"
 
