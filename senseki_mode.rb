@@ -72,3 +72,4 @@ while score_menu != 0
     #成績画面からの遷移case文end
 end
 #成績画面用のwhileループend
+#適用時は外す
