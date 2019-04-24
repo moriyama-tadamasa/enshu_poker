@@ -106,4 +106,5 @@ ary_com = []
 ary_user = [["D", 2],["S", 3],["C", 4],["D", 6],["H", 5]]
 ary_com = [["C",1],["S",2],["H",3],["C",4],["D",5]]
 win_lose(ary_user,ary_com,5,5)
+shuuseiyou
 =end
