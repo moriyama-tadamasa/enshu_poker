@@ -142,7 +142,6 @@ class Pokerdraw
                             #p drw[l]
                             #puts ""
                         }
-                        drw.sort{tdp}
                         #print "t壊れる#{t}"
                         #s = gets
                     }
