@@ -2,7 +2,10 @@ require "dbi"
 require "./poker_hand"
 require "./poker_win_lose"
 require "./tehudalogic"
+require "./hanyou_mth.rb"
 $dbh = DBI.connect('DBI:SQLite3:./porker.db')
+ary1 = [["D", 2],["S", 3],["C", 4],["D", 6],["H", 5]]
+ary2 = [["C",1],["S",2],["H",3],["C",4],["D",5]]
 t1_ch = 0
 t2_ch = 0
 t3_ch = 0
@@ -106,12 +109,28 @@ while(1)
                                 end
                             end
                             puts "~~~~~~~~~~~~勝敗画面~~~~~~~~~~~~~~"
-                            puts "あなたの手札は〜〜です"
+                            print "あなたの手札は"
+                            a = yaku_hantei(ary1)
+                            hand_name(a)
+                            puts "です"
                             puts "[t1|t2|t3|t4|t5]"
-                            puts "COMの手札は〜〜です"
+                            print "COMの手札は"
+                            b = yaku_hantei(ary2)
+                            hand_name(b)
+                            puts "です"
                             puts "|t1|t2|t3|t4|t5|"
-                            puts "あなたの勝ちです"
-                            puts "戦績:win勝lose敗draw分"  
+                            win_lose(ary1,ary2,a,b)
+                            total_game = 0
+                            win_game = 0
+                            lose_game = 0
+                            draw_game = 0
+                            $dbh.select_all('SELECT MAX(id) ,MAX(win) ,SUM(lose) ,SUM(draw) FROM score_tbl') do |row|
+                                total_game = row[0].to_i
+                                win_game = row[1].to_i
+                                lose_game = row[2].to_i
+                                draw_game = row[3].to_i
+                            end
+                            puts "戦績:#{total_game}戰#{win_game}勝#{lose_game}敗#{draw_game}分"  
                             t1_ch = 0
                             t2_ch = 0
                             t3_ch = 0
@@ -164,9 +183,18 @@ while(1)
                         win_card_disp << row2[:win]
                         hand << row2[:hand]
                     end
-                    0.upto(4){|i|
-                        puts "#{win_card_disp[i]}勝目 : #{hand[i]}"
-                    }
+                    win_card_disp_len = win_card_disp.length
+                    unless win.nil? then
+                        if win_card_disp_len < 5 then
+                            0.upto(win_card_disp_len - 1){|i|
+                                puts "#{win_card_disp[i]}勝目 : #{hand[i]}"
+                            }
+                        else
+                            0.upto(4){|i|
+                                puts "#{win_card_disp[i]}勝目 : #{hand[i]}"
+                            }
+                        end
+                    end
                 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     puts "成績の初期化：1"
                     puts "メイン画面へ戻る：0"

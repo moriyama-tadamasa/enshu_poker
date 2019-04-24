@@ -1,6 +1,7 @@
-=begin
+
 require "dbi"
 $dbh = DBI.connect('DBI:SQLite3:./porker.db')
+=begin
 $dbh.do("DROP TABLE IF EXISTS score_tbl")
 $dbh.do(
     "CREATE TABLE score_tbl(
@@ -30,7 +31,7 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
         
         $dbh.select_all("SELECT MAX(win) AS w FROM score_tbl") do |win|
             $win_num = win[:w].to_i
-            if $win_num == nil then
+            if $win_num.nil? then
                 $win_num = 1
             else
                 $win_num += 1
@@ -102,11 +103,10 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
     end
 end
 
-=begin
+#=begin
 ary_user = []
 ary_com = []
 ary_user = [["D", 2],["S", 3],["C", 4],["D", 6],["H", 5]]
 ary_com = [["C",1],["S",2],["H",3],["C",4],["D",5]]
 win_lose(ary_user,ary_com,5,5)
-shuuseiyou
-=end
+#=end
