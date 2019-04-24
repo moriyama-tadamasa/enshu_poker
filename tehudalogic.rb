@@ -4,14 +4,18 @@
 
 require "dbi"
 
-$dbh = DBI.connect('DBI:SQLite3:porker.db')
+$dbh = DBI.connect('DBI:SQLite3:poker.db')
 
 
 class Pokerdraw
     def hudajunbi()
         deck = []
         $dbh.do("DROP TABLE IF EXISTS card")
-        $dbh.do("CREATE TABLE card(id integer primary key,number intger,suit char(20))")
+        $dbh.do("CREATE TABLE card(id integer primary key,number integer,suit char(20))")
+        $dbh.do("DROP TABLE IF EXISTS mcard")
+        $dbh.do("CREATE TABLE mcard(id integer primary key,number integer,suit char(20))")
+        $dbh.do("DROP TABLE IF EXISTS ncard")
+        $dbh.do("CREATE TABLE ncard(id integer primary key,number integer,suit char(20))")
         #トランプ全部つっこむとこ
         1.upto(13){|i|
         $dbh.do("insert into card(suit,number) VALUES(?,?)","D",i)
@@ -25,18 +29,17 @@ class Pokerdraw
         return deck
     end
 
-    def fulldraw()
+    def fulldraw(name)
         fb = []
-        dc = ""
+        dc = 0
         #トランプ抜くとこ
         5.times{|j|
             while(1)
-                
                 r = rand(52)
                 $dbh.select_all("select number,suit from card where id = ?",r){|crd|
                     dc = crd[1],crd[0]
                 }
-                if dc != nil || sc != 0 || sc !=[]
+                if dc != nil && dc != 0 && dc !=[]
                     $dbh.do("insert into #{name}(number,suit) values(?,?)",dc[1],dc[0])
                     break
                 end
@@ -48,8 +51,8 @@ class Pokerdraw
     end
 
     def draw()
-        sb = ""
-        sc = ""
+        sb = 0
+        sc = 0
         #トランプ抜くとこ
         while(1)
             r = rand(52)
@@ -114,7 +117,7 @@ class Pokerdraw
             #p pdw
         }
         if pdw == 0
-            t = fulldraw("ncard")
+            drw = fulldraw("ncard")
         else
             if pdw > 1
                 if pdw == 4
@@ -159,6 +162,7 @@ end
 #以下確認用
 
 pd = Pokerdraw.new()
+
 =begin
 s = pd.hudajunbi()
 
@@ -190,22 +194,29 @@ tlw = pd.draw()
 
 pd.hudajunbi()
 
+test1 = []
+
+test1 = pd.fulldraw("mcard")
+
 test = []
 
 test = pd.fulldraw("ncard")
 
-puts "jaberunulualalalalala"
+puts "-----変換前-----"
 
 print test
 
-puts"\nbananaajilililili"
+puts"\n------------"
 puts ""
 
 test = pd.npcchoice(test)
 
  sbwwww = gets
 
-puts "gaba"
-p test
-puts "GABA"
+
+ puts "-----変換後-----"
+
+ print test
+ 
+ puts"\n------------"
 
