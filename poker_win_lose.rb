@@ -27,7 +27,6 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
             ary_user_txt[i] = "#{ary_user_suit[i]}#{ary_user_num[i]}"
         }
         win_txt = ary_user_txt.join("|")
-        p win_txt
         
         $dbh.select_all("SELECT MAX(win) AS w FROM score_tbl") do |win|
             $win_num = win[:w].to_i
@@ -57,36 +56,18 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
         end
     }
 
-    if hand_score_user == 9 or hand_score_user == 5 then
+    if hand_score_user == 9 or hand_score_com == 5 then
         if ary_user_num[1] == 2
             hi_card_user[0] = 1
         end
         if ary_com_num[1] == 2
             hi_card_com[0] = 1
+            p hi_card_com
         end
     end
-    hi_card_com = hi_card_com.uniq.sort
-    hi_card_user = hi_card_user.uniq.sort
-    hi_com_len = hi_card_com.length
-    hi_user_len = hi_card_user.length
-    hi_user_len_roop = hi_user_len - 1
-
-    x = 5 - hi_com_len
-    y = 5 - hi_user_len
-
-    1.upto(x){|x|
-        hi_card_com << 0
-    }
-    1.upto(y){|y|
-        hi_card_user << 0
-    }
     hi_card_com = hi_card_com.sort
-    p hi_card_com
     hi_card_user = hi_card_user.sort
-    p hi_card_user
     draw_point = 0
-
-
     if hand_score_user == hand_score_com then
         4.downto(0){|i|
             if hi_card_user[i] > hi_card_com[i]
@@ -122,10 +103,10 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
     end
 end
 
-=begin
+#=begin
 ary_user = []
 ary_com = []
 ary_user = [["D", 2],["S", 2],["C", 2],["D", 2],["H", 7]]
 ary_com = [["C",2],["S",2],["H",2],["C",2],["D",6]]
-win_lose(ary_user,ary_com,2,2)
-=end
+win_lose(ary_user,ary_com,2,5)
+#=end
