@@ -62,7 +62,6 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
         end
         if ary_com_num[1] == 2
             hi_card_com[0] = 1
-            p hi_card_com
         end
     end
     hi_card_com = hi_card_com.sort
