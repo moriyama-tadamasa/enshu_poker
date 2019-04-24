@@ -3,7 +3,7 @@ require "./poker_hand"
 require "./poker_win_lose"
 require "./tehudalogic"
 $dbh = DBI.connect('DBI:SQLite3:./porker.db')
-
+#本体
 t1_ch = 0
 t2_ch = 0
 t3_ch = 0
