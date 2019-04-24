@@ -27,7 +27,7 @@ def yaku_hantei(ary)
         end
     end
     if royal_stra_count == 5 && suit_count == 5 then
-        puts "ロイヤルストレートフラッシュ"
+        print "ロイヤルストレートフラッシュ"
         return 10
     end
     #puts "ロイヤルストレートフラッシュ判定失敗"
@@ -39,7 +39,7 @@ def yaku_hantei(ary)
         end
     }
     if stra_count == 5 && suit_count == 5 then
-        puts "ストレートフラッシュ"
+        print "ストレートフラッシュ"
         return 9
     end
     #puts "ストレートフラッシュ判定失敗"
@@ -65,7 +65,7 @@ def yaku_hantei(ary)
         else
     end
     if four_card_count == 4 then
-        puts "フォーカード"
+        print "フォーカード"
         return 8
     end
     #puts "フォーカード判定失敗"
@@ -86,7 +86,7 @@ def yaku_hantei(ary)
             end
         }
         if ary_full[0] == ary_full[1] then
-            puts "フルハウス"
+            print "フルハウス"
             return 7
         end
     end
@@ -94,21 +94,21 @@ def yaku_hantei(ary)
     #~~~~~~~~~~~~~~~~~~~以下フラッシュ判定~~~~~~~~~~~~~~~~~~~
     #puts "以下フラッシュ判定開始"
     if suit_count == 5 then
-        puts "フラッシュ"
+        print "フラッシュ"
         return 6
     end
     #puts "フラッシュ判定失敗"
     #~~~~~~~~~~~~~~~~~~~~以下ストレート判定~~~~~~~~~~~~~~~~~~
     #puts "以下ストレート判定開始"
     if stra_count == 5 then
-        puts "ストレート"
+        print "ストレート"
         return 5
     end
     #puts "ストレート判定失敗"
     #~~~~~~~~~~~~~~~~~~~~以下スリーカード判定~~~~~~~~~~~~~~~~
     #puts "以下スリーカード判定開始"
     if three_card_count == 3 then
-        puts "スリーカード"
+        print "スリーカード"
         return 4
     end
     #puts "スリーカード判定失敗"
@@ -121,23 +121,22 @@ def yaku_hantei(ary)
         end
     }
     if pair == 2 then
-        puts "ツーペア"
+        print "ツーペア"
         return 3
     end
     #puts "ツーペア判定失敗"
     #~~~~~~~~~~~~~~~~~~~~~~以下ワンペア判定~~~~~~~~~~~~~~~~~
     #puts "以下ワンペア判定開始"
     if pair == 1 then
-        puts "ワンペア"
+        print "ワンペア"
         return 2
     end
     #puts "ワンペア判定失敗"
     #~~~~~~~~~~~~~~~~~~~~~~以下ノーペア判定~~~~~~~~~~~~~~~~~
     #puts "以上の役に全て当てはまらないのでノーペア判定です"
-    puts "ノーペア"
+    print "ノーペア"
     return 1
 end
-
 =begin
 ary = []
 ary = [["D", 1],["S", 4],["C", 8],["D", 3],["H", 5]]
