@@ -196,12 +196,12 @@ while(1)
                                         )"
                                     )
                                 elsif score_menu_start != 0
-                                    puts "1か0で入力してください"
+                                    puts "0か1で入力してください"
                                 end
                             end
                         #成績初期化確認画面のwhileループend
                         else
-                            puts "1か0で入力してください"
+                            puts "0か1で入力してください"
                     end
                 #成績画面からの遷移case文end  
                 end  
