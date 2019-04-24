@@ -1,6 +1,6 @@
+=begin
 require "dbi"
 $dbh = DBI.connect('DBI:SQLite3:./porker.db')
-=begin
 $dbh.do("DROP TABLE IF EXISTS score_tbl")
 $dbh.do(
     "CREATE TABLE score_tbl(
@@ -100,8 +100,10 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
     end
 end
 
+=begin
 ary_user = []
 ary_com = []
 ary_user = [["D", 2],["S", 3],["C", 4],["D", 6],["H", 5]]
 ary_com = [["C",1],["S",2],["H",3],["C",4],["D",5]]
 win_lose(ary_user,ary_com,5,5)
+=end

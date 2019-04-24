@@ -139,6 +139,7 @@ def yaku_hantei(ary)
     return 1
 end
 
+=begin
 ary = []
 ary = [["D", 1],["S", 4],["C", 8],["D", 3],["H", 5]]
 
@@ -146,3 +147,4 @@ p ary
 
 
 yaku_hantei(ary)
+=end
