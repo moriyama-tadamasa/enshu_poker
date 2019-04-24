@@ -52,7 +52,7 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
             hi_card_user[i] = 14
         end
         if hi_card_com[i] == 1 then
-            hi_card_com[i] == 14
+            hi_card_com[i] = 14
         end
     }
     if hand_score_user == 9 || 5 then
@@ -66,34 +66,36 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
     hi_card_com = hi_card_com.sort
     hi_card_user = hi_card_user.sort
     draw_point = 0
-    4.downto(0){|i|
-        if hi_card_user[i] > hi_card_com[i]
-            puts "あなたの勝ちです"
-            ary_user_txt = []
-            0.upto(4){|i|
-                ary_user_txt[i] = "#{ary_user_suit[i]}#{ary_user_num[i]}"
-            }
-            win_txt = ary_user_txt.join("|")
-            p win_txt
+    if hand_score_user == hand_score_com then
+        4.downto(0){|i|
+            if hi_card_user[i] > hi_card_com[i]
+                puts "あなたの勝ちです"
+                ary_user_txt = []
+                0.upto(4){|i|
+                    ary_user_txt[i] = "#{ary_user_suit[i]}#{ary_user_num[i]}"
+                }
+                win_txt = ary_user_txt.join("|")
+                p win_txt
 
-            $dbh.select_all("SELECT MAX(win) AS w FROM score_tbl") do |win|
-                $win_num = win[:w].to_i
-                if $win_num.nil? then
-                    $win_num = 1
-                else
-                    $win_num += 1
+                $dbh.select_all("SELECT MAX(win) AS w FROM score_tbl") do |win|
+                    $win_num = win[:w].to_i
+                    if $win_num.nil? then
+                        $win_num = 1
+                    else
+                        $win_num += 1
+                    end
                 end
+                $dbh.do("INSERT INTO score_tbl(win,hand) VALUES(?,?)",$win_num,win_txt)
+                break
+            elsif hi_card_user[i] < hi_card_com[i]
+                puts "あなたの負けです"
+                $dbh.do("INSERT INTO score_tbl(lose) VALUES(?)",1)
+                break
+            else
+                draw_point += 1
             end
-            $dbh.do("INSERT INTO score_tbl(win,hand) VALUES(?,?)",$win_num,win_txt)
-            break
-        elsif hi_card_user[i] < hi_card_com[i]
-            puts "あなたの負けです"
-            $dbh.do("INSERT INTO score_tbl(lose) VALUES(?)",1)
-            break
-        else
-            draw_point += 1
-        end
-    }
+        }
+    end
     if draw_point == 5 then
         puts "引き分けです"
         $dbh.do("INSERT INTO score_tbl(draw) VALUES(?)",1)
