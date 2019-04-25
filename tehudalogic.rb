@@ -41,7 +41,7 @@ class Pokerdraw
             end
             $dbh.do("delete from deck where id = ?",r)
         }
-        $dbh.select_all("select suit,number,mark from #{name}"){|ii|
+        $dbh.select_all("select suit,number,mark from #{name} order by number asc"){|ii|
             fb << ii
         }
         return fb
@@ -74,6 +74,16 @@ class Pokerdraw
         $dbh.do("update #{name} set suit=?,number=? where id=#{cid}",pd[0],pd[1])
         return pd
     end
+
+    #ドローの関係上COMみたいについでにソートができないので作成。引数はテーブル名
+    def psort(name)
+        pta = []
+        $dbh.select_all("select suit,number,mark from #{name} order by number asc"){|ii|
+            pta << ii
+        }
+        return pta
+    end
+
 =begin
     def npcchoice(drw)
         pdw = 0
@@ -117,6 +127,7 @@ class Pokerdraw
     def comchoice(drw,name)
         pdw = 0
         tdp = 0
+        td = []
         #p drw
         $dbh.select_all("select count(number) from #{name} group by number having 1<count(*)"){|npcard|
         #重複している数
@@ -165,7 +176,10 @@ class Pokerdraw
         drw.each{|d|
         $dbh.do("insert into #{name}(suit,number) values(?,?)",d[0],d[1])
         }
-        return drw
+        $dbh.select_all("select suit,number from #{name} order by number asc"){|ii|
+            td << ii
+        }
+        return td
     end
 
 end
