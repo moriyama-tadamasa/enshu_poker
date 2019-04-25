@@ -88,7 +88,7 @@ while(1)
                                             ans_game_trade_end = gets.to_i
                                             if ans_game_trade_end == 1
                                                 ans_game_trade = 0
-                                                t_ch.each{|n| 
+                                                t_ch.each{|n|
                                                     if n[0] == 1
                                                         player_tehuda[tehuda_count] = pd.pdraw(tehuda_count,"playercard")
                                                     end
