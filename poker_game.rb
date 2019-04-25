@@ -88,9 +88,14 @@ while(1)
                                             ans_game_trade_end = gets.to_i
                                             if ans_game_trade_end == 1
                                                 ans_game_trade = 0
-                                                t_ch.each{|n|
+                                                t_ch.each{|n| 
                                                     if n[0] == 1
-                                                        player_tehuda[n[0]] = pd.pdraw(n[0],"playercard")
+                                                        player_tehuda[tehuda_count] = pd.pdraw(tehuda_count,"playercard")
+                                                    end
+                                                    if tehuda_count == 4
+                                                        tehuda_count = 0
+                                                    else
+                                                        tehuda_count += 1
                                                     end
                                                 }
                                                 com_tehuda = pd.comchoice(com_tehuda,"comcard")
