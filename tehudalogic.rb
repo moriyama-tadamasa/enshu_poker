@@ -39,8 +39,10 @@ class Pokerdraw
                     break
                 end
             end
-            fb << dc
             $dbh.do("delete from deck where id = ?",r)
+        }
+        $dbh.select_all("select suit,number,mark from #{name}"){|ii|
+            fb << ii
         }
         return fb
     end
