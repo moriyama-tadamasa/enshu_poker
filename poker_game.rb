@@ -3,6 +3,7 @@ require "./poker_hand"
 require "./poker_win_lose"
 require "./tehudalogic"
 $dbh = DBI.connect('DBI:SQLite3:./porker.db')
+=begin
 $dbh.do("DROP TABLE IF EXISTS score_tbl")
 $dbh.do(
     "CREATE TABLE score_tbl(
@@ -11,6 +12,8 @@ $dbh.do(
         lose INTEGER,
         draw INTEGER,
         hand CHAR(20))")
+
+=end
 
 tehuda_count = 0
 pd = Pokerdraw.new()
@@ -90,7 +93,9 @@ while(1)
                                                 ans_game_trade = 0
                                                 t_ch.each{|n|
                                                     if n[0] == 1
-                                                        player_tehuda[tehuda_count] = pd.pdraw(tehuda_count,"playercard")
+                                                        $dbh.select_all("select id from playercard where suit like '#{player_tehuda[tehuda_count][0]}' and number = #{player_tehuda[tehuda_count][1]}",){|i|
+                                                        pd.pdraw(i[0],"playercard")
+                                                        }
                                                     end
                                                     if tehuda_count == 4
                                                         tehuda_count = 0
@@ -98,6 +103,7 @@ while(1)
                                                         tehuda_count += 1
                                                     end
                                                 }
+                                                player_tehuda = pd.psort("playercard")
                                                 com_tehuda = pd.comchoice(com_tehuda,"comcard")
                                                 break
                                             elsif ans_game_trade_end == 0
