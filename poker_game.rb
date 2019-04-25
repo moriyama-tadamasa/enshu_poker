@@ -2,10 +2,7 @@ require "dbi"
 require "./poker_hand"
 require "./poker_win_lose"
 require "./tehudalogic"
-require "./hanyou_mth.rb"
 $dbh = DBI.connect('DBI:SQLite3:./porker.db')
-ary1 = [["D", 2],["S", 3],["C", 4],["D", 6],["H", 5]]
-ary2 = [["C",1],["S",2],["H",3],["C",4],["D",5]]
 t1_ch = 0
 t2_ch = 0
 t3_ch = 0
@@ -111,12 +108,10 @@ while(1)
                             puts "~~~~~~~~~~~~勝敗画面~~~~~~~~~~~~~~"
                             print "あなたの手札は"
                             a = yaku_hantei(ary1)
-                            hand_name(a)
                             puts "です"
                             puts "[t1|t2|t3|t4|t5]"
                             print "COMの手札は"
                             b = yaku_hantei(ary2)
-                            hand_name(b)
                             puts "です"
                             puts "|t1|t2|t3|t4|t5|"
                             win_lose(ary1,ary2,a,b)

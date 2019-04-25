@@ -81,9 +81,7 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
         hi_card_user << 0
     }
     hi_card_com = hi_card_com.sort
-    p hi_card_com
     hi_card_user = hi_card_user.sort
-    p hi_card_user
     draw_point = 0
 
 
@@ -122,10 +120,10 @@ def win_lose(ary_user,ary_com,hand_score_user,hand_score_com)
     end
 end
 
-#=begin
+=begin
 ary_user = []
 ary_com = []
 ary_user = [["D", 2],["S", 2],["C", 2],["D", 7],["H", 7]]
 ary_com = [["C",2],["S",2],["H",2],["C",6],["D",7]]
 win_lose(ary_user,ary_com,2,2)
-#=end
+=end
