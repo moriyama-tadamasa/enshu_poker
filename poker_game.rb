@@ -2,15 +2,18 @@ require "dbi"
 require "./poker_hand"
 require "./poker_win_lose"
 require "./tehudalogic"
-require "./hanyou_mth.rb"
 $dbh = DBI.connect('DBI:SQLite3:./porker.db')
-ary1 = [["D", 2],["S", 3],["C", 4],["D", 6],["H", 5]]
-ary2 = [["C",1],["S",2],["H",3],["C",4],["D",5]]
-t1_ch = 0
-t2_ch = 0
-t3_ch = 0
-t4_ch = 0
-t5_ch = 0
+$dbh.do("DROP TABLE IF EXISTS score_tbl")
+$dbh.do(
+    "CREATE TABLE score_tbl(
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        win INTEGER,
+        lose INTEGER,
+        draw INTEGER,
+        hand CHAR(20))")
+
+tehuda_count = 0
+pd = Pokerdraw.new()
 while(1)
     while(1)
         puts "~~~~~~~~~~~~メイン画面~~~~~~~~~~~~"
@@ -22,9 +25,22 @@ while(1)
         case sel
             when 0 then
                 while(1)
+                    t_ch = Array.new(5,0)
+                    pd.hudajunbi()
+                    player_tehuda = pd.fulldraw("playercard") 
+                    com_tehuda = pd.fulldraw("comcard")
                     puts "~~~~~~~~~~~~ゲーム画面~~~~~~~~~~~~"
                     puts "現在の手札"
-                    puts "[||||]"
+                    print "["
+                    player_tehuda.each{|t|
+                        tehuda_count +=1
+                        if tehuda_count == 5
+                            puts "#{t[0]}#{t[1]}]"
+                            tehuda_count = 0
+                        else
+                            print "#{t[0]}#{t[1]}|"
+                        end
+                    }
                     puts "手札の交換：0"
                     puts "メイン画面に戻る：1"
                     puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -35,14 +51,29 @@ while(1)
                             while(ans_game_trade != 0)
                                 puts "~~~~~~~~~~~手札交換画面~~~~~~~~~~~"
                                 #↓現在の手札を表示
-                                puts "[||||]"
+                                print "["
+                                player_tehuda.each{|t|
+                                    tehuda_count +=1
+                                    if tehuda_count == 5
+                                        puts "#{t[0]}#{t[1]}]"
+                                        tehuda_count = 0
+                                    else
+                                        print "#{t[0]}#{t[1]}|"
+                                    end
+                                }
                                 puts "交換したいカードを選択してください"
                                 puts "選択され●がついたカードが交換されます"
-                                print "1:t1  "
-                                print "2:t2  "
-                                puts "3:t3"
-                                print "4:t4  "
-                                puts "5:t5"
+                                player_tehuda.each{|t|
+                                    tehuda_count +=1
+                                    if tehuda_count % 3 == 0 || tehuda_count == 5
+                                        puts "#{tehuda_count}:#{t[0]}#{t[1]}#{t[2]}"
+                                        if tehuda_count == 5
+                                            tehuda_count = 0
+                                        end
+                                    else
+                                        print "#{tehuda_count}:#{t[0]}#{t[1]}#{t[2]}  "
+                                    end
+                                }
                                 puts "0:カードの交換を実行する"
                                 puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
                                 ans_game_trade = gets.to_i
@@ -57,6 +88,12 @@ while(1)
                                             ans_game_trade_end = gets.to_i
                                             if ans_game_trade_end == 1
                                                 ans_game_trade = 0
+                                                t_ch.each{|n|
+                                                    if n[0] == 1
+                                                        player_tehuda[n[0]] = pd.pdraw(n[0],"playercard")
+                                                    end
+                                                }
+                                                com_tehuda = pd.comchoice(com_tehuda,"comcard")
                                                 break
                                             elsif ans_game_trade_end == 0
                                                 ans_game_trade = 10
@@ -66,60 +103,77 @@ while(1)
                                             end
                                         end
                                     when 1 then
-                                        if t1_ch == 0 then
-                                            t1_ch = 1
-                                            t1 = t1 + "●"
+                                        if player_tehuda[0][2] == nil then
+                                            t_ch[0] = 1
+                                            player_tehuda[0][2] = "●"
                                         else
-                                            t1_ch = 0
-                                            t1 = t1_disp
+                                            t_ch[0] = 0
+                                            player_tehuda[0][2] = nil
                                         end
                                     when 2 then
-                                        if t2_ch == 0 then
-                                            t2_ch = 1
-                                            t2 = t2 + "●"
+                                        if player_tehuda[1][2] == nil then
+                                            t_ch[1] = 1
+                                            player_tehuda[1][2] = "●"
                                         else
-                                            t2_ch = 0
-                                            t2 = t2_disp
+                                            t_ch[1] = 0
+                                            player_tehuda[1][2] = nil
                                         end
                                     when 3 then
-                                        if t3_ch == 0 then
-                                            t3_ch = 1
-                                            t3 = t3 + "●"
+                                        if player_tehuda[2][2] == nil then
+                                            t_ch[2] = 1
+                                            player_tehuda[2][2] = "●"
                                         else
-                                            t3_ch = 0
-                                            t3 = t3_disp
+                                            t_ch[2] = 0
+                                            player_tehuda[2][2] = nil
                                         end
                                     when 4 then
-                                        if t4_ch == 0 then
-                                            t4_ch = 1
-                                            t4 = t4 + "●"
+                                        if player_tehuda[3][2] == nil then
+                                            t_ch[3] = 1
+                                            player_tehuda[3][2] = "●"
                                         else
-                                            t4_ch = 0
-                                            t4 = t4_disp
+                                            t_ch[3] = 0
+                                            player_tehuda[3][2] = nil
                                         end
                                     when 5 then
-                                        if t5_ch == 0 then
-                                            t5_ch = 1
-                                            t5 = t5 + "●"
+                                        if player_tehuda[4][2] == nil then
+                                            t_ch[4] = 1
+                                            player_tehuda[4][2] = "●"
                                         else
-                                            t5_ch = 0
-                                            t5 = t5_disp
+                                            t_ch[4] = 0
+                                            player_tehuda[4][2] = nil
                                         end
                                     else
                                 end
                             end
+
                             puts "~~~~~~~~~~~~勝敗画面~~~~~~~~~~~~~~"
                             print "あなたの手札は"
-                            a = yaku_hantei(ary1)
-                            hand_name(a)
+                            a = yaku_hantei(player_tehuda)
                             puts "です"
-                            puts "[t1|t2|t3|t4|t5]"
+                            print "["
+                            player_tehuda.each{|t|
+                                tehuda_count +=1
+                                if tehuda_count == 5
+                                    puts "#{t[0]}#{t[1]}]"
+                                    tehuda_count = 0
+                                else
+                                    print "#{t[0]}#{t[1]}|"
+                                end
+                            }
                             print "COMの手札は"
-                            b = yaku_hantei(ary2)
-                            hand_name(b)
+                            b = yaku_hantei(com_tehuda)
                             puts "です"
-                            puts "|t1|t2|t3|t4|t5|"
-                            win_lose(ary1,ary2,a,b)
+                            print "["
+                            com_tehuda.each{|t|
+                                tehuda_count +=1
+                                if tehuda_count == 5
+                                    puts "#{t[0]}#{t[1]}]"
+                                    tehuda_count = 0
+                                else
+                                    print "#{t[0]}#{t[1]}|"
+                                end
+                            }
+                            win_lose(player_tehuda,com_tehuda,a,b)
                             total_game = 0
                             win_game = 0
                             lose_game = 0
@@ -131,11 +185,6 @@ while(1)
                                 draw_game = row[3].to_i
                             end
                             puts "戦績:#{total_game}戰#{win_game}勝#{lose_game}敗#{draw_game}分"  
-                            t1_ch = 0
-                            t2_ch = 0
-                            t3_ch = 0
-                            t4_ch = 0
-                            t5_ch = 0
                             tuduki = 10
                             while(tuduki != 0 && tuduki != 1)
                                 puts "~~~~~~~~~~~~続行画面~~~~~~~~~~~~~~"
