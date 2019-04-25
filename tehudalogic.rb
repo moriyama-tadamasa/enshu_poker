@@ -25,7 +25,7 @@ class Pokerdraw
     def fulldraw(name)
         fb = []
         $dbh.do("DROP TABLE IF EXISTS #{name}")
-        $dbh.do("CREATE TABLE #{name}(id integer primary key,suit char(20),number integer)")
+        $dbh.do("CREATE TABLE #{name}(id integer primary key,suit char(20),number integer,mark string)")
         #トランプ抜くとこ
         5.times{|j|
             while(1)
@@ -35,7 +35,7 @@ class Pokerdraw
                     dc = crd[0],crd[1]
                 }
                 if dc != nil && dc != 0 && dc !=[]
-                    $dbh.do("insert into #{name}(suit,number) values(?,?)",dc[0],dc[1])
+                    $dbh.do("insert into #{name}(suit,number,mark) values(?,?,?)",dc[0],dc[1],nil)
                     break
                 end
             end
@@ -173,6 +173,7 @@ end
 #以下確認用
 
 =begin
+
 pd = Pokerdraw.new()
 pd.hudajunbi()
 test1 = []
@@ -192,4 +193,5 @@ print "test1#{test1}\n"
 print "test#{test}"
  
 puts"\n------------"
+
 =end
