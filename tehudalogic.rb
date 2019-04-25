@@ -10,12 +10,12 @@ class Pokerdraw
         $dbh.do("DROP TABLE IF EXISTS deck")
         $dbh.do("CREATE TABLE deck(id integer primary key,suit char(20),number integer)")
         1.upto(13){|i|
-        $dbh.do("insert into card(suit,number) VALUES(?,?)","D",i)
-        $dbh.do("insert into card(suit,number) VALUES(?,?)","H",i)
-        $dbh.do("insert into card(suit,number) VALUES(?,?)","S",i)
-        $dbh.do("insert into card(suit,number) VALUES(?,?)","C",i)
+        $dbh.do("insert into deck(suit,number) VALUES(?,?)","D",i)
+        $dbh.do("insert into deck(suit,number) VALUES(?,?)","H",i)
+        $dbh.do("insert into deck(suit,number) VALUES(?,?)","S",i)
+        $dbh.do("insert into deck(suit,number) VALUES(?,?)","C",i)
         }
-        $dbh.select_all("select number,suit from card"){|crd|
+        $dbh.select_all("select number,suit from deck"){|crd|
             deck << [crd[1],crd[0]]
         }
         return deck
@@ -24,44 +24,44 @@ class Pokerdraw
     #山札から5枚ずつドローするメソッドです、引数として””で囲ったテーブル名を入力してください
     def fulldraw(name)
         fb = []
-        dc = []
         $dbh.do("DROP TABLE IF EXISTS #{name}")
-        $dbh.do("CREATE TABLE #{name}(id integer primary key,suit char(20),number integer)") 
+        $dbh.do("CREATE TABLE #{name}(id integer primary key,suit char(20),number integer)")
         #トランプ抜くとこ
         5.times{|j|
             while(1)
+                dc = 0
                 r = rand(52)
-                $dbh.select_all("select number,suit from card where id = ?",r){|crd|
-                    dc = crd[1],crd[0]
+                $dbh.select_all("select suit,number from deck where id = ?",r){|crd|
+                    dc = crd[0],crd[1]
                 }
-                if dc != nil
-                    $dbh.do("insert into #{name}(number,suit) values(?,?)",dc[0],dc[1])
+                if dc != nil && dc != 0 && dc !=[]
+                    $dbh.do("insert into #{name}(suit,number) values(?,?)",dc[0],dc[1])
                     break
                 end
             end
             fb << dc
-            $dbh.do("delete from card where id = ?",r) 
+            $dbh.do("delete from deck where id = ?",r)
         }
         return fb
     end
 
     #トランプを一枚引くメソッドです。pdrawまたはcomchoiceから呼び出されます。
     def draw()
-        sb = []
-        sc = []
+        sb = 0
         #トランプ抜くとこ
         while(1)
+            sc = 0
             r = rand(52)
-            $dbh.select_all("select number,suit from card where id = #{r}"){|crd|
-                sc = crd[1],crd[0]
-                p sc
+            $dbh.select_all("select suit,number from deck where id = #{r}"){|crd|
+                sc = crd[0],crd[1]
             }
-            if sc != nil || sc != 0
+            if sc != nil && sc != 0 && sc !=[]
+                $dbh.do("delete from deck where id = ?",r)
                 break
             end
         end
+        #puts "ドローしました"
         sb = sc
-        $dbh.do("delete from card where id = ?",r)
         return sb
     end
 
@@ -76,13 +76,35 @@ class Pokerdraw
     def npcchoice(drw)
         pdw = 0
         tdp = 0
-        $dbh.select_all("select count(number),number from ncard group by number having 1<count(*)"){|npcard|
+        t=[]
+        p drw
+        $dbh.select_all("select count(number) from ncard group by number having 1<count(*)"){|npcard|
         #重複している数
-                pdw = npcard[0].to_i
+            pdw = npcard[0].to_i
         }
-        if pdw > 1
-            if pdw == 4
-                return drw
+        p pdw
+        if pdw > 3
+            p drw
+        else
+            if pdw > 1
+                $dbh.select_all("select number from ncard group by number having 1<count(number)"){|lll|
+                    #重複してるカードの等級
+                    tdp = lll[0].to_i
+                }
+                p drw
+                p tdp
+                #機能し始めた
+                drw.each{|l|
+                    if l[1] != tdp
+                        l = draw()
+                    else
+                        l = l
+                    end
+                    t << l
+                }
+            else
+                #機能しなくなった
+                t = fulldraw("ncard")
             end
         end 
         return t
@@ -148,43 +170,25 @@ end
 
 
 
-
-
-
-
-
 #以下確認用
 
 =begin
-
 pd = Pokerdraw.new()
-
 pd.hudajunbi()
-
 test1 = []
-
 test1 = pd.fulldraw("playercard")
-
 test = []
-test = pd.fulldraw("ncard")
-puts "jaberunulualalalalala"
-print test
-puts"bananaajilililili"
+test = pd.fulldraw("comcard")
+puts "-----変換前-----"
+print "test1#{test1}\n"
+print "test#{test}"
+puts"\n------------"
 puts ""
-
 sbwwww = gets
-
 test1[0] = pd.pdraw(1,"playercard")
-
 test = pd.comchoice(test,"comcard")
-
-
-
-
 puts "-----変換後-----"
-
- sbwwww = gets
-
+print "test1#{test1}\n"
 print "test#{test}"
  
 puts"\n------------"
