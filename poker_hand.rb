@@ -100,10 +100,11 @@ def yaku_hantei(ary)
     #puts "フラッシュ判定失敗"
     #~~~~~~~~~~~~~~~~~~~~以下ストレート判定~~~~~~~~~~~~~~~~~~
     #puts "以下ストレート判定開始"
-    if stra_count == 5 then
+    if stra_count == 5 or royal_stra_count == 5 then
         print "ストレート"
         return 5
     end
+
     #puts "ストレート判定失敗"
     #~~~~~~~~~~~~~~~~~~~~以下スリーカード判定~~~~~~~~~~~~~~~~
     #puts "以下スリーカード判定開始"
@@ -139,7 +140,7 @@ def yaku_hantei(ary)
 end
 =begin
 ary = []
-ary = [["D", 1],["S", 4],["C", 8],["D", 3],["H", 5]]
+ary = [["D", 1],["S", 10],["C", 11],["D", 12],["H", 13]]
 
 p ary
 
